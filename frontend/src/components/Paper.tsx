@@ -1,32 +1,52 @@
-import { useEffect } from 'react';
-import './Paper.css'
+import { useEffect, useRef } from 'react';
+import rough from 'roughjs';
+import type { Point } from 'roughjs/bin/geometry';
+import './Paper.css';
+
+interface PaperProps {
+  year: number;
+  route: Point[];
+}
+
+function Paper({ year, route }: PaperProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
 
-function Paper({ year }: { year: number }) {
-
+  // Drawing logic
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/`);
-        const data = await response.text();
-        console.log("Auto-fetched data:", data);
-      } catch (error) {
-        console.error("Fetch error:", error);
+    if (canvasRef.current && route.length > 0) {
+      const canvas = canvasRef.current;
+      const rc = rough.canvas(canvas);
+      const context = canvas.getContext('2d');
+
+      if (context) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
       }
-    };
 
-    fetchData();
-  }, []);
-
+      rc.linearPath(route, {
+        stroke: '#333',
+        strokeWidth: 1.5,
+        roughness: 1.2,
+        bowing: 1,
+      });
+    }
+  }, [route]);
 
   return (
     <a
-      className="calendar flex flex-col items-center justify-center block h-[16rem] w-[12rem] bg-[url('paper.png')] bg-no-repeat bg-contain bg-center cursor-pointer"
+      className="calendar flex flex-col items-center justify-center block h-[16rem] w-[12rem] bg-[url('paper.png')] bg-no-repeat bg-contain bg-center cursor-pointer relative"
     >
       <span className="sr-only">Open {year} calendar</span>
+
+      <canvas
+        ref={canvasRef}
+        width={300}
+        height={400}
+        className="pointer-events-none"
+        style={{ width: '80%', height: 'auto', marginTop: '32px' }}
+      />
     </a>
   );
 }
 
-
-export default Paper
+export default Paper;

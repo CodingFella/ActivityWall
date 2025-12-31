@@ -11,6 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+backend/gpx_files/*
+__pycache__/*
+convert.py
+fit2gpx.py
+todo.md
+fit/*
+
 
 # Editor directories and files
 .vscode/*
