@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+.calendar {
+  transition: transform 0.05s;
+}
+
+.calendar:hover {
+  transform-origin: top center;
+  animation-name: sway;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.5, 0.5, 0.5, 0.5);
+}
+
+@keyframes sway {
+  0% {
+    transform: rotate(0deg) scale(1.01);
+  }
+  25% {
+    transform: rotate(-2deg) scale(1.01);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.01);
+  }
+  75% {
+    transform: rotate(2deg) scale(1.01);
+  }
+  100% {
+    transform: rotate(0deg) scale(1.01);
+  }
+}
