@@ -211,13 +211,8 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-const base = import.meta.env.BASE_URL;
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, `${base}index.html`), function (err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 main();
