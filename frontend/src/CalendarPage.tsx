@@ -100,7 +100,7 @@ function CalendarPage() {
         <span className='text-3xl'>{year}</span>
       </h1>
 
-      <div className="m-[2rem]">
+      <div className="paper-fade-in m-[2rem]">
         {/* Loop through each Month Group */}
         {Object.entries(runsByMonth).map(([monthName, runs], index) => (
           <div key={monthName}>
