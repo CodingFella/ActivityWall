@@ -19,12 +19,13 @@ function CalendarPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const dividers = ['wave.png', 'teeth.png', 'chain.png']
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`http://localhost:3000/get-points?year=${year}`);
+        const response = await fetch(`${API_URL}/get-points?year=${year}`);
         const json_data = await response.json();
         setData(json_data);
       } catch (error) {
