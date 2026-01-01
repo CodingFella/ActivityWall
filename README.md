@@ -4,16 +4,16 @@ Minimalist, hand-drawn visualization of GPS activities, organized by year and mo
 
 ## 🌟 Highlights
 
-- Hand-Drawn Art: I love my subpar doodles.
-- Responsive Calendar: Fits mobile screens and dynamically updates with database
-- Custom Backend: I coded the API to fully suit frontend requirements
+- **Hand-Drawn Art**: I love my subpar doodles!
+- **Responsive Calendar**: Fits mobile screens and dynamically updates with database
+- **Custom Backend**: I coded the API to fully suit frontend requirements
 
 
-## Getting Started
+## 👾 Getting Started
 
 1. Prerequisites
- * Node.js (v18+)
- * PostgreSQL database
+  * Node.js (v18+)
+  * PostgreSQL database
 
 2. Installation
 ```bash
@@ -44,3 +44,9 @@ node server.js
 # Start the frontend
 npm run dev
 ```
+
+## 🚧 Future Plans
+
+* Click on paper for enlarged view and show stats
+  * Easier to browse between runs
+* More paper variants
