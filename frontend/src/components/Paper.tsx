@@ -4,15 +4,15 @@ import type { Point } from 'roughjs/bin/geometry';
 import './Paper.css';
 
 interface PaperProps {
-  index: number;
   year: number;
   route: Point[];
 }
 
-function Paper({ index, year, route }: PaperProps) {
+function Paper({ year, route }: PaperProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const paper = ['paper.png', 'thumbtack_paper.png'];
+  const base = import.meta.env.BASE_URL;
+  const paper = [`${base}paper.png`, `${base}thumbtack_paper.png`];
 
   // Drawing logic
   useEffect(() => {
@@ -36,8 +36,8 @@ function Paper({ index, year, route }: PaperProps) {
 
   return (
     <a
-      className="calendar flex flex-col items-center justify-center block h-[16rem] w-[12rem] bg-[url('thumbtack_paper.png')] bg-no-repeat bg-contain bg-center cursor-pointer relative"
-      style={{ backgroundImage: `url(/${paper[(year > 2022 ? 1 : 0) % paper.length]})` }}
+      className="calendar flex flex-col items-center justify-center block h-[16rem] w-[12rem] bg-no-repeat bg-contain bg-center cursor-pointer relative"
+      style={{ backgroundImage: `url(${paper[(year > 2022 ? 1 : 0) % paper.length]})` }}
     >
       <span className="sr-only">Open {year} calendar</span>
 

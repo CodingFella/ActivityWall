@@ -2,8 +2,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import Paper from './components/Paper';
-import { Link } from 'react-router-dom'
 import type { Point } from 'roughjs/bin/geometry';
+import Navbar from "./components/Navbar.tsx";
 
 interface RouteData {
   points: Point[];
@@ -18,7 +18,8 @@ function CalendarPage() {
   const [data, setData] = useState<Record<string, RouteData[]>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const dividers = ['wave.png', 'teeth.png', 'chain.png']
+  const base = import.meta.env.BASE_URL;
+  const dividers = [`${base}wave.png`, `${base}teeth.png`, `${base}chain.png`]
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   useEffect(() => {
@@ -68,14 +69,7 @@ function CalendarPage() {
   if (isLoading) {
     return (
       <>
-        <nav className="flex w-full px-6 py-2 gap-2">
-          <Link className="hover:underline" to={`/${year - 1}`}>
-            {year - 1}
-          </Link>
-          <Link className="hover:underline ml-auto" to={`/${year + 1}`}>
-            {year + 1}
-          </Link>
-        </nav>
+        <Navbar year={year} />
         <h1 className='text-4xl text-center m-[2rem]'>
           Jacob's Activity Wall<br />
           <span className='text-3xl'>{year}</span>
@@ -87,14 +81,7 @@ function CalendarPage() {
 
   return (
     <>
-      <nav className="flex w-full px-6 py-2 gap-2">
-        <Link className="hover:underline" to={`/${year - 1}`}>
-          {year - 1}
-        </Link>
-        <Link className="hover:underline ml-auto" to={`/${year + 1}`}>
-          {year + 1}
-        </Link>
-      </nav>
+      <Navbar year={year} />
       <h1 className='text-4xl text-center m-[2rem]'>
         Jacob's Activity Wall<br />
         <span className='text-3xl'>{year}</span>
@@ -109,19 +96,19 @@ function CalendarPage() {
             <div className='flex month-divider my-[2rem] items-center'>
               <div
                 className="grow bg-repeat-x bg-contain h-[2rem]"
-                style={{ backgroundImage: `url(/${dividers[index % dividers.length]})` }}
+                style={{ backgroundImage: `url(${dividers[index % dividers.length]})` }}
               ></div>
               <h2 className='text-3xl mx-8 min-w-[100px] text-center'>{monthName}</h2>
               <div
                 className="grow bg-repeat-x bg-contain h-[2rem]"
-                style={{ backgroundImage: `url(/${dividers[index % dividers.length]})` }}
+                style={{ backgroundImage: `url(${dividers[index % dividers.length]})` }}
               ></div>
             </div>
 
             <div className='calendar-container flex flex-wrap justify-center gap-[2rem]'>
               {runs.map(({ date, run }) => (
                 <div key={run.id} className="flex flex-col items-center">
-                  <Paper index={run.id} year={year} route={run.points} />
+                  <Paper year={year} route={run.points} />
                   <span className="text-gray-600 mt-2">{date}</span>
                 </div>
               ))}
