@@ -2,6 +2,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import Paper from './components/Paper';
+import { Link } from 'react-router-dom'
 import type { Point } from 'roughjs/bin/geometry';
 
 interface RouteData {
@@ -16,6 +17,8 @@ function CalendarPage() {
 
   const [data, setData] = useState<Record<string, RouteData[]>>({});
   const [isLoading, setIsLoading] = useState(true);
+
+  const dividers = ['wave.png', 'teeth.png', 'chain.png']
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +40,7 @@ function CalendarPage() {
     const groups: Record<string, { date: string, run: RouteData }[]> = {};
 
     const sortedDates = Object.keys(data).sort();
-    console.log(sortedDates)
+    console.log(data)
 
     sortedDates.forEach(date => {
       const months = ["January", "February", "March", "April", "May", "June",
@@ -46,17 +49,14 @@ function CalendarPage() {
       const monthIndex = parseInt(date.split('-')[1], 10) - 1;
       const monthName = months[monthIndex];
 
-      console.log(date, monthName)
-
       if (!groups[monthName]) {
         groups[monthName] = [];
       }
 
-      // We take the first run of the day for the Paper
-      if (data[date].length > 0) {
+      for (let i = 0; i < data[date].length; i++) {
         groups[monthName].push({
           date: date,
-          run: data[date][0]
+          run: data[date][i]
         });
       }
     });
@@ -67,51 +67,75 @@ function CalendarPage() {
   if (isLoading) {
     return (
       <>
+        <nav className="flex w-full px-6 py-2 gap-2">
+          <Link className="hover:underline" to={`/${year - 1}`}>
+            {year - 1}
+          </Link>
+          <Link className="hover:underline ml-auto" to={`/${year + 1}`}>
+            {year + 1}
+          </Link>
+        </nav>
         <h1 className='text-4xl text-center m-[2rem]'>
-          Jacob's Run Wall<br />
+          Jacob's Activity Wall<br />
           <span className='text-3xl'>{year}</span>
         </h1>
-        <div className="text-center mt-20 text-2xl">Loading your runs...</div>;
+        <div className="text-center mt-20 text-2xl">Loading activities...</div>;
       </>
     );
   }
 
   return (
     <>
+      <nav className="flex w-full px-6 py-2 gap-2">
+        <Link className="hover:underline" to={`/${year - 1}`}>
+          {year - 1}
+        </Link>
+        <Link className="hover:underline ml-auto" to={`/${year + 1}`}>
+          {year + 1}
+        </Link>
+      </nav>
       <h1 className='text-4xl text-center m-[2rem]'>
-        Jacob's Run Wall<br />
+        Jacob's Activity Wall<br />
         <span className='text-3xl'>{year}</span>
       </h1>
 
-      {/* Loop through each Month Group */}
-      {Object.entries(runsByMonth).map(([monthName, runs]) => (
-        <div key={monthName}>
+      <div className="m-[2rem]">
+        {/* Loop through each Month Group */}
+        {Object.entries(runsByMonth).map(([monthName, runs], index) => (
+          <div key={monthName}>
 
-          {/* Dynamic Month Divider */}
-          <div className='flex month-divider my-[2rem] items-center'>
-            <div className="grow bg-repeat-x bg-contain bg-[url(wave.png)] h-[2rem]"></div>
-            <h2 className='text-3xl mx-8 min-w-[100px] text-center'>{monthName}</h2>
-            <div className="grow bg-repeat-x bg-contain bg-[url(wave.png)] h-[2rem]"></div>
+            {/* Dynamic Month Divider */}
+            <div className='flex month-divider my-[2rem] items-center'>
+              <div
+                className="grow bg-repeat-x bg-contain h-[2rem]"
+                style={{ backgroundImage: `url(/${dividers[index % dividers.length]})` }}
+              ></div>
+              <h2 className='text-3xl mx-8 min-w-[100px] text-center'>{monthName}</h2>
+              <div
+                className="grow bg-repeat-x bg-contain h-[2rem]"
+                style={{ backgroundImage: `url(/${dividers[index % dividers.length]})` }}
+              ></div>
+            </div>
+
+            <div className='calendar-container flex flex-wrap justify-center gap-[2rem]'>
+              {runs.map(({ date, run }) => (
+                <div key={run.id} className="flex flex-col items-center">
+                  <Paper index={run.id} year={year} route={run.points} />
+                  <span className="text-gray-600 mt-2">{date}</span>
+                </div>
+              ))}
+            </div>
+
           </div>
+        ))}
 
-          <div className='calendar-container flex flex-wrap justify-center gap-[2rem]'>
-            {runs.map(({ date, run }) => (
-              <div key={run.id} className="flex flex-col items-center">
-                <Paper year={year} route={run.points} />
-                <span className="text-gray-500 mt-2">{date}</span>
-              </div>
-            ))}
+        {/* Empty State Handler */}
+        {Object.keys(runsByMonth).length === 0 && (
+          <div className="text-center mt-20 text-2xl">
+            No activities found for {year}.
           </div>
-
-        </div>
-      ))}
-
-      {/* Empty State Handler */}
-      {Object.keys(runsByMonth).length === 0 && (
-        <div className="text-center mt-20 text-2xl">
-          No runs found for {year}.
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }

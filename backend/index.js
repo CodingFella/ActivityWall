@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const CANVAS_WIDTH = 300;
 const CANVAS_HEIGHT = 400;
@@ -182,8 +182,8 @@ async function main() {
 app.get("/get-points", async (req, res) => {
   const inputYear = req.query.year;
   const dbResult = await query(
-    "SELECT id, start_time, converted_data FROM maps WHERE EXTRACT(YEAR FROM start_time) = $1",
-    [inputYear],
+    "SELECT id, start_time::text, converted_data FROM maps WHERE start_time::text LIKE $1",
+    [`${inputYear}%`],
   );
 
   const response = {};
@@ -207,8 +207,8 @@ app.get("/get-points", async (req, res) => {
   res.json(response);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 main();
