@@ -179,7 +179,7 @@ async function main() {
   }
 }
 
-app.get("/get-points", async (req, res) => {
+app.get("/api/get-points", async (req, res) => {
   const inputYear = req.query.year;
   const dbResult = await query(
     "SELECT id, start_time::text, converted_data FROM maps WHERE start_time::text LIKE $1",
@@ -211,8 +211,13 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-app.get("/:splat*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+const base = import.meta.env.BASE_URL;
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, `${base}index.html`), function (err) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
 });
 
 main();
